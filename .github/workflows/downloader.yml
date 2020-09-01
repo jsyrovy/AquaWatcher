@@ -1,4 +1,4 @@
-name: downloader
+name: Downloader
 on:
   schedule:
     - cron: "*/15 6-21 * * *"
@@ -6,17 +6,21 @@ jobs:
   download:
     runs-on: ubuntu-18.04
     steps:
-      - name: check out
+      - name: Check out
         uses: actions/checkout@v2
-      - name: setup python
+      - name: Setup python
         uses: actions/setup-python@v2
         with:
           python-version: "3.8.5"
-      - name: install requirements
+      - name: Install requirements
         run: pip install -r downloader_requirements.txt
-      - name: download
+      - name: Setup timezone
+        uses: zcong1993/setup-timezone@master
+        with:
+          timezone: Europe/Prague
+      - name: Download
         run: python downloader.py
-      - name: save
+      - name: Save
         uses: EndBug/add-and-commit@v4
         with:
           add: data
