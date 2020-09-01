@@ -20,7 +20,7 @@ def get_record() -> Record:
 
     values = soup.find("div", class_="fast-info").find_all("span")
     record = Record(pool=int(values[0].text), aqua=int(values[1].text), wellness=int(values[2].text))
-    print(f"Data was downloaded: {record}")
+    print(f"Data were downloaded: {record}")
 
     return record
 
@@ -35,7 +35,7 @@ def save_record(record: Record) -> None:
     with path.open("a") as f:
         f.write(f"{record.dt:%Y-%m-%d %H:%M:%S},{record.pool},{record.aqua},{record.wellness}\n")
 
-    print(f"Data was saved: {path}")
+    print(f"Data were saved: {path}")
 
 
 if __name__ == "__main__":
