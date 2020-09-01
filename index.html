@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8">
+    <title>Pardubické Aquacentrum</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartist-plugin-tooltips@0.0.17/dist/chartist-plugin-tooltip.min.js" type="text/javascript"></script>
+    <style>
+        .pool {
+            color: #d70206;
+        }
+        .aqua {
+            color: #f05b4f;
+        }
+        .wellness {
+            color: #f4c63d;
+        }
+        .legend {
+            text-align: center;
+        }
+        .chartist-tooltip {
+            position: absolute;
+            display: inline-block;
+            opacity: 0;
+            min-width: 5em;
+            padding: 0.5em;
+            background: #453d3f;
+            color: #ffffff;
+            font-family: Raleway, Helvetica, Arial, sans-serif;
+            font-weight: 700;
+            text-align: center;
+            pointer-events: none;
+            z-index: 1;
+            -webkit-transition: opacity 0.2s linear;
+            -moz-transition: opacity 0.2s linear;
+            -o-transition: opacity 0.2s linear;
+            transition: opacity 0.2s linear;
+        }
+        .chartist-tooltip:before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            margin-left: -15px;
+            border: 15px solid transparent;
+            border-top-color: #453d3f;
+        }
+        .chartist-tooltip.tooltip-show {
+            opacity: 1;
+        }
+        .ct-area,
+        .ct-line {
+            pointer-events: none;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="twelve column" style="margin-top: 5%">
+                <h3>Pardubické Aquacentrum</h3>
+                <h5>Průměrná hodinová návštěvnost</h5>
+            </div>
+        </div>
+        
+            <div class="row" style="margin-top: 2%">
+                <h4 title="Průměr z(e) 156 dnů.">Pondělí</h4>
+                <div class="ct-chart1 ct-major-twelfth"></div>
+                <div class="legend"><span class="pool">Bazén</span> | <span class="aqua">Aqua</span> | <span class="wellness">Wellness</span></div>
+            </div>
+        
+            <div class="row" style="margin-top: 2%">
+                <h4 title="Průměr z(e) 160 dnů.">Úterý</h4>
+                <div class="ct-chart2 ct-major-twelfth"></div>
+                <div class="legend"><span class="pool">Bazén</span> | <span class="aqua">Aqua</span> | <span class="wellness">Wellness</span></div>
+            </div>
+        
+            <div class="row" style="margin-top: 2%">
+                <h4 title="Průměr z(e) 156 dnů.">Středa</h4>
+                <div class="ct-chart3 ct-major-twelfth"></div>
+                <div class="legend"><span class="pool">Bazén</span> | <span class="aqua">Aqua</span> | <span class="wellness">Wellness</span></div>
+            </div>
+        
+            <div class="row" style="margin-top: 2%">
+                <h4 title="Průměr z(e) 155 dnů.">Čtvrtek</h4>
+                <div class="ct-chart4 ct-major-twelfth"></div>
+                <div class="legend"><span class="pool">Bazén</span> | <span class="aqua">Aqua</span> | <span class="wellness">Wellness</span></div>
+            </div>
+        
+            <div class="row" style="margin-top: 2%">
+                <h4 title="Průměr z(e) 156 dnů.">Pátek</h4>
+                <div class="ct-chart5 ct-major-twelfth"></div>
+                <div class="legend"><span class="pool">Bazén</span> | <span class="aqua">Aqua</span> | <span class="wellness">Wellness</span></div>
+            </div>
+        
+            <div class="row" style="margin-top: 2%">
+                <h4 title="Průměr z(e) 158 dnů.">Sobota</h4>
+                <div class="ct-chart6 ct-major-twelfth"></div>
+                <div class="legend"><span class="pool">Bazén</span> | <span class="aqua">Aqua</span> | <span class="wellness">Wellness</span></div>
+            </div>
+        
+            <div class="row" style="margin-top: 2%">
+                <h4 title="Průměr z(e) 154 dnů.">Neděle</h4>
+                <div class="ct-chart0 ct-major-twelfth"></div>
+                <div class="legend"><span class="pool">Bazén</span> | <span class="aqua">Aqua</span> | <span class="wellness">Wellness</span></div>
+            </div>
+        
+    </div>
+    <script>
+        var options = {
+            lineSmooth: true,
+            showPoint: true,
+            axisX: {
+            showGrid: false,
+            showLabel: true
+            },
+            axisY: {
+            showGrid: true,
+            showLabel: true
+            },
+            plugins: [
+                Chartist.plugins.tooltip()
+            ]
+        }
+        
+            new Chartist.Line('.ct-chart1', {labels: [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], series: [[28, 32, 23, 25, 42, 49, 42, 41, 50, 70, 85, 95, 102, 95, 64, 24], [0, 0, 0, 0, 17, 34, 26, 25, 28, 30, 32, 34, 30, 22, 12, 2], [0, 0, 0, 0, 1, 1, 7, 12, 11, 11, 13, 20, 25, 27, 25, 7]]}, options);
+        
+            new Chartist.Line('.ct-chart2', {labels: [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], series: [[31, 36, 30, 30, 41, 45, 43, 45, 51, 60, 86, 107, 100, 83, 64, 22], [0, 0, 0, 0, 14, 29, 24, 33, 35, 31, 35, 37, 32, 33, 11, 2], [0, 0, 0, 0, 0, 1, 6, 11, 10, 11, 15, 21, 26, 27, 25, 8]]}, options);
+        
+            new Chartist.Line('.ct-chart3', {labels: [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], series: [[24, 32, 30, 28, 42, 49, 44, 40, 53, 63, 85, 100, 108, 103, 69, 23], [0, 0, 0, 0, 15, 31, 26, 26, 30, 35, 41, 44, 37, 23, 12, 2], [0, 0, 0, 0, 12, 17, 10, 11, 11, 12, 18, 25, 32, 33, 29, 8]]}, options);
+        
+            new Chartist.Line('.ct-chart4', {labels: [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], series: [[31, 34, 25, 26, 36, 41, 41, 51, 56, 64, 81, 101, 102, 82, 61, 22], [0, 0, 0, 0, 17, 35, 30, 35, 39, 37, 39, 43, 37, 25, 13, 2], [0, 0, 0, 0, 0, 0, 6, 11, 11, 13, 17, 19, 20, 24, 20, 5]]}, options);
+        
+            new Chartist.Line('.ct-chart5', {labels: [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], series: [[25, 32, 27, 26, 43, 53, 56, 55, 70, 84, 93, 107, 88, 72, 52, 25], [0, 0, 0, 0, 24, 47, 37, 35, 42, 47, 49, 52, 48, 36, 21, 4], [0, 0, 0, 0, 0, 1, 8, 15, 15, 16, 17, 21, 26, 29, 28, 9]]}, options);
+        
+            new Chartist.Line('.ct-chart6', {labels: [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], series: [[2, 8, 23, 30, 72, 90, 89, 76, 83, 104, 117, 113, 99, 78, 57, 31], [0, 0, 0, 2, 37, 92, 72, 71, 103, 133, 133, 113, 88, 61, 31, 6], [0, 0, 0, 1, 9, 18, 17, 20, 24, 28, 28, 31, 33, 33, 27, 8]]}, options);
+        
+            new Chartist.Line('.ct-chart0', {labels: [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], series: [[2, 7, 15, 25, 76, 97, 91, 72, 80, 94, 98, 90, 81, 69, 52, 24], [0, 0, 0, 3, 45, 101, 72, 67, 95, 116, 107, 81, 56, 33, 15, 3], [0, 0, 0, 1, 11, 20, 18, 20, 22, 24, 26, 30, 35, 37, 32, 9]]}, options);
+        
+    </script>
+</body>
+</html>
