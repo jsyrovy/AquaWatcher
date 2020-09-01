@@ -1,6 +1,5 @@
 name: Publisher
 on:
-  push:
   schedule:
     - cron: "0 4 * * *"
 jobs:
