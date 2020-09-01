@@ -5,13 +5,9 @@ on:
 jobs:
   download:
     runs-on: ubuntu-18.04
-    env:
-      BRANCH: master
     steps:
       - name: check out
         uses: actions/checkout@v2
-        with:
-          ref: ${BRANCH}
       - name: setup python
         uses: actions/setup-python@v2
         with:
@@ -27,6 +23,5 @@ jobs:
           author_name: downloader
           author_email: ${{ secrets.AUTHOR_EMAIL }}
           message: Add data
-          ref: ${BRANCH}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
