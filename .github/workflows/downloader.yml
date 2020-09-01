@@ -1,7 +1,7 @@
 name: Downloader
 on:
   schedule:
-    - cron: "*/15 6-21 * * *"
+    - cron: "*/10 6-21 * * *"
 jobs:
   download:
     runs-on: ubuntu-18.04
