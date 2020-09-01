@@ -1,0 +1,32 @@
+name: downloader
+on:
+  schedule:
+    - cron: "*/15 6-21 * * *"
+jobs:
+  download:
+    runs-on: ubuntu-18.04
+    env:
+      BRANCH: master
+    steps:
+      - name: check out
+        uses: actions/checkout@v2
+        with:
+          ref: ${BRANCH}
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8.5"
+      - name: install requirements
+        run: pip install -r downloader_requirements.txt
+      - name: download
+        run: python downloader.py
+      - name: save
+        uses: EndBug/add-and-commit@v4
+        with:
+          add: data
+          author_name: downloader
+          author_email: ${{ secrets.AUTHOR_EMAIL }}
+          message: Add data
+          ref: ${BRANCH}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
