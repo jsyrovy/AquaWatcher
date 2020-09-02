@@ -28,8 +28,10 @@ def get_record() -> Record:
 def save_record(record: Record) -> None:
     path = pathlib.Path(f"data/{record.dt.year}/{record.dt:%m}/{record.dt:%Y-%m-%d}.csv")
 
-    if not path.exists():
+    if not path.parent.exists():
         path.parent.mkdir(parents=True)
+
+    if not path.exists():
         path.write_text("dt,pool,aqua,wellness\n")
 
     with path.open("a") as f:
