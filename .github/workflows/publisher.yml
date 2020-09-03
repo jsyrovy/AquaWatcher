@@ -1,7 +1,7 @@
 name: Publisher
 on:
   schedule:
-    - cron: "0 4 * * *"
+    - cron: "0 20 * * *"
 jobs:
   publish:
     runs-on: ubuntu-18.04
