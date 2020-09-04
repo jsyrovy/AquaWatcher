@@ -1,7 +1,7 @@
 name: Downloader
 on:
   schedule:
-    - cron: "0 4-19 * * *"
+    - cron: "58 3-18 * * *"
     - cron: "15 4-19 * * *"
     - cron: "30 4-19 * * *"
     - cron: "45 4-19 * * *"
