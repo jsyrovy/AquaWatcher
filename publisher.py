@@ -1,4 +1,5 @@
 import dataclasses
+import datetime
 import pathlib
 import sqlite3
 import typing
@@ -94,7 +95,8 @@ def get_days_count(cursor: sqlite3.Cursor, day: Day) -> int:
 
 def publish_page(charts: typing.List[Chart]) -> None:
     page = pathlib.Path("index.html")
-    page.write_text(get_template().render(charts=charts), "UTF-8")
+    page.write_text(get_template().render(charts=charts, dt=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
+                    "UTF-8")
     print(f"Page was published: {page}")
 
 
