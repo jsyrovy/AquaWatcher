@@ -14,6 +14,10 @@ jobs:
           python-version: "3.8.5"
       - name: Install requirements
         run: pip install -r publisher_requirements.txt
+      - name: Setup timezone
+        uses: zcong1993/setup-timezone@master
+        with:
+          timezone: Europe/Prague
       - name: Publish
         run: python publisher.py
       - name: Save
