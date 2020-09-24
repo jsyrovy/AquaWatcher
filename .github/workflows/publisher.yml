@@ -2,6 +2,7 @@ name: Publisher
 on:
   schedule:
     - cron: "0 20 * * *"
+  workflow_dispatch:
 jobs:
   publish:
     runs-on: ubuntu-18.04
