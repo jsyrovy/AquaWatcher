@@ -2,6 +2,7 @@ import dataclasses
 import datetime
 import pathlib
 import sqlite3
+import sys
 import typing
 
 import jinja2
@@ -62,42 +63,66 @@ def get_charts(cursor: sqlite3.Cursor) -> typing.List[Chart]:
             Day(6, "Sobota"),
             Day(0, "Neděle")]
 
+    date_from = get_date_from()
+
+    if date_from:
+        print(f"Date filter from: {date_from:%Y-%m-%d}")
+
     for day in days:
-        records = get_records(cursor, day)
-        charts.append(get_chart(cursor, records, day))
+        records = get_records(cursor, day, date_from)
+        charts.append(get_chart(cursor, records, day, date_from))
 
     print("Data were selected.")
     return charts
 
 
-def get_records(cursor: sqlite3.Cursor, day: Day) -> typing.List[Record]:
+def get_date_from() -> typing.Optional[datetime.datetime]:
+    if len(sys.argv) == 1:
+        return None
+
+    return datetime.datetime.strptime(sys.argv[1], "%Y-%m-%d")
+
+
+def get_records(cursor: sqlite3.Cursor, day: Day, date_from: datetime.datetime) -> typing.List[Record]:
     cursor.execute("SELECT strftime('%H', dt), round(avg(pool), 0), round(avg(aqua), 0), round(avg(wellness), 0) "
                    "FROM data "
-                   f"WHERE strftime('%w', dt) = '{day.number}'"
+                   f"WHERE strftime('%w', dt) = '{day.number}'{get_date_filter(date_from)}"
                    "GROUP BY strftime('%H', dt) "
                    "ORDER BY strftime('%H', dt)")
     return [Record(int(r[0]), int(r[1]), int(r[2]), int(r[3])) for r in cursor.fetchall()]
 
 
-def get_chart(cursor: sqlite3.Cursor, records: typing.List[Record], day: Day) -> Chart:
+def get_date_filter(date_from: datetime.datetime) -> str:
+    return f" AND strftime('%Y-%m-%d', dt) >= '{date_from:%Y-%m-%d}'" if date_from else ""
+
+
+def get_chart(cursor: sqlite3.Cursor, records: typing.List[Record], day: Day, date_from: datetime.datetime) -> Chart:
     return Chart(day=day,
-                 days=get_days_count(cursor, day),
+                 days=get_days_count(cursor, day, date_from),
                  labels=str([r.hour for r in records]),
                  serie_pool=str([r.pool for r in records]),
                  serie_aqua=str([r.aqua for r in records]),
                  serie_wellness=str([r.wellness for r in records]))
 
 
-def get_days_count(cursor: sqlite3.Cursor, day: Day) -> int:
-    cursor.execute(f"SELECT DISTINCT date(dt) FROM data WHERE strftime('%w', dt) = '{day.number}'")
+def get_days_count(cursor: sqlite3.Cursor, day: Day, date_from: datetime.datetime) -> int:
+    cursor.execute(f"SELECT DISTINCT date(dt) FROM data "
+                   f"WHERE strftime('%w', dt) = '{day.number}'{get_date_filter(date_from)}")
     return len(cursor.fetchall())
 
 
 def publish_page(charts: typing.List[Chart]) -> None:
-    page = pathlib.Path("index.html")
+    page = pathlib.Path(get_file_name())
     page.write_text(get_template().render(charts=charts, dt=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
                     "UTF-8")
     print(f"Page was published: {page}")
+
+
+def get_file_name() -> str:
+    if len(sys.argv) == 1:
+        return "index.html"
+
+    return sys.argv[2]
 
 
 def get_template() -> jinja2.Template:
