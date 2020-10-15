@@ -1,5 +1,7 @@
 # AquaWatcher
 
+**Aktualizace dat je momentálně pozastavena z důvodu uzavření aquacentra.**
+
 Stránka zobrazující grafy s průměrnou hodinovou návštěvností pardubického aquacentra.
 
 https://jsyrovy.github.io/AquaWatcher/
