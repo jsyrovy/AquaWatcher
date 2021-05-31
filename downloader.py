@@ -19,7 +19,12 @@ def get_record() -> Record:
     soup = bs4.BeautifulSoup(r.content, "html.parser")
 
     values = soup.find("div", class_="fast-info").find_all("span")
-    record = Record(pool=int(values[0].text), aqua=int(values[1].text), wellness=int(values[2].text))
+
+    if len(values) == 2:
+        record = Record(pool=int(values[0].text), aqua=0, wellness=int(values[1].text))
+    else:
+        record = Record(pool=int(values[0].text), aqua=int(values[1].text), wellness=int(values[2].text))
+
     print(f"Data were downloaded: {record}")
 
     return record
