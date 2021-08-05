@@ -35,3 +35,4 @@ jobs:
           rm index.html
           python publisher.py
           test -e index.html
+          grep "Pardubické Aquacentrum" index.html
