@@ -129,17 +129,10 @@ def get_file_name() -> str:
 
 def get_template() -> jinja2.Template:
     env = jinja2.Environment(
-        loader=jinja2.DictLoader(
-            {INDEX_TEMPLATE: get_template_content(INDEX_TEMPLATE)}
-        ),
+        loader=jinja2.FileSystemLoader("templates"),
         autoescape=jinja2.select_autoescape(["html", "xml"])
     )
     return env.get_template(INDEX_TEMPLATE)
-
-
-def get_template_content(template: str) -> str:
-    with open(f"templates/{template}", "r") as f:
-        return f.read()
 
 
 if __name__ == "__main__":
