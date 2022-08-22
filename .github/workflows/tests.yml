@@ -2,7 +2,7 @@ name: Tests
 on: push
 jobs:
   test_downloader:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Check out
         uses: actions/checkout@v2
@@ -20,7 +20,7 @@ jobs:
           echo "file_name = $file_name"
           test -e $file_name
   test_publisher:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Check out
         uses: actions/checkout@v2
