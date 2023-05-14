@@ -4,21 +4,15 @@ PYTHON=venv/bin/python3
 	help
 
 help:
-	@echo "make help"
-	@echo "  show help"
-	@echo "make init"
-	@echo "  create venv and install requirements"
-	@echo "make download"
-	@echo "  run downloader"
-	@echo "make publish"
-	@echo "  run publisher"
-	@echo "make publish-after-covid"
-	@echo "  run publisher for data after first lockdown"
+	@echo "I don't know what you want me to do."
 
 init:
 	python3 -m venv venv
 	${PYTHON} -m pip install -r downloader_requirements.txt
 	${PYTHON} -m pip install -r publisher_requirements.txt
+
+init-dev: init
+	${PYTHON} -m pip install -r dev_requirements.txt
 
 download:
 	${PYTHON} downloader.py
@@ -28,3 +22,20 @@ publish:
 
 publish-after-covid:
 	${PYTHON} publisher.py 2020-05-25 after_covid.html
+
+mypy:
+	${PYTHON} -m mypy --ignore-missing-imports .
+
+flake8:
+	${PYTHON} -m flake8 .
+
+black:
+	${PYTHON} -m black .
+
+before-commit:
+	make black
+	make mypy
+	make flake8
+
+ipython:
+	${PYTHON} -c "import IPython;IPython.terminal.ipapp.launch_new_instance();"
