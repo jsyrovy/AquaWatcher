@@ -91,7 +91,11 @@ def get_records(
     cursor: sqlite3.Cursor, day: Day, date_from: Optional[datetime.datetime]
 ) -> list[Record]:
     cursor.execute(
-        "SELECT strftime('%H', dt), round(avg(pool), 0), round(avg(aqua), 0), round(avg(wellness), 0) "
+        "SELECT "
+        "strftime('%H', dt), "
+        "round(avg(pool), 0), "
+        "round(avg(aqua), 0), "
+        "round(avg(wellness), 0) "
         "FROM data "
         f"WHERE strftime('%w', dt) = '{day.number}'{get_date_filter(date_from)}"
         "GROUP BY strftime('%H', dt) "

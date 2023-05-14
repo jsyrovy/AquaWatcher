@@ -47,7 +47,8 @@ def save_record(record: Record) -> None:
 
     with path.open("a") as f:
         f.write(
-            f"{record.dt:%Y-%m-%d %H:%M:%S},{record.pool},{record.aqua},{record.wellness}\n"
+            f"{record.dt:%Y-%m-%d %H:%M:%S},"
+            f"{record.pool},{record.aqua},{record.wellness}\n"
         )
 
     print(f"Data were saved: {path}")
