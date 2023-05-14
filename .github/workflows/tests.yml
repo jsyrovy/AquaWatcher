@@ -9,7 +9,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.8.5"
+          python-version: "3.11"
       - name: Install requirements
         run: pip install -r downloader_requirements.txt
       - name: Test
@@ -27,7 +27,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.8.5"
+          python-version: "3.11"
       - name: Install requirements
         run: pip install -r publisher_requirements.txt
       - name: Test
