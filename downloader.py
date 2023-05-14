@@ -23,7 +23,11 @@ def get_record() -> Record:
     if len(values) == 2:
         record = Record(pool=int(values[0].text), aqua=0, wellness=int(values[1].text))
     else:
-        record = Record(pool=int(values[0].text), aqua=int(values[1].text), wellness=int(values[2].text))
+        record = Record(
+            pool=int(values[0].text),
+            aqua=int(values[1].text),
+            wellness=int(values[2].text),
+        )
 
     print(f"Data were downloaded: {record}")
 
@@ -31,7 +35,9 @@ def get_record() -> Record:
 
 
 def save_record(record: Record) -> None:
-    path = pathlib.Path(f"data/{record.dt.year}/{record.dt:%m}/{record.dt:%Y-%m-%d}.csv")
+    path = pathlib.Path(
+        f"data/{record.dt.year}/{record.dt:%m}/{record.dt:%Y-%m-%d}.csv"
+    )
 
     if not path.parent.exists():
         path.parent.mkdir(parents=True)
@@ -40,7 +46,9 @@ def save_record(record: Record) -> None:
         path.write_text("dt,pool,aqua,wellness\n")
 
     with path.open("a") as f:
-        f.write(f"{record.dt:%Y-%m-%d %H:%M:%S},{record.pool},{record.aqua},{record.wellness}\n")
+        f.write(
+            f"{record.dt:%Y-%m-%d %H:%M:%S},{record.pool},{record.aqua},{record.wellness}\n"
+        )
 
     print(f"Data were saved: {path}")
 
