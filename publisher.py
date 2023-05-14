@@ -3,7 +3,7 @@ import datetime
 import pathlib
 import sqlite3
 import sys
-import typing
+from typing import Optional
 
 import jinja2
 import pandas
@@ -55,7 +55,7 @@ def load_csv(conn: sqlite3.Connection, path: pathlib.Path) -> None:
     df.to_sql("data", conn, if_exists="append")
 
 
-def get_charts(cursor: sqlite3.Cursor) -> typing.List[Chart]:
+def get_charts(cursor: sqlite3.Cursor) -> list[Chart]:
     charts = []
     days = [
         Day(1, "Pondělí"),
@@ -80,7 +80,7 @@ def get_charts(cursor: sqlite3.Cursor) -> typing.List[Chart]:
     return charts
 
 
-def get_date_from() -> typing.Optional[datetime.datetime]:
+def get_date_from() -> Optional[datetime.datetime]:
     if len(sys.argv) == 1:
         return None
 
@@ -88,8 +88,8 @@ def get_date_from() -> typing.Optional[datetime.datetime]:
 
 
 def get_records(
-    cursor: sqlite3.Cursor, day: Day, date_from: datetime.datetime
-) -> typing.List[Record]:
+    cursor: sqlite3.Cursor, day: Day, date_from: Optional[datetime.datetime]
+) -> list[Record]:
     cursor.execute(
         "SELECT strftime('%H', dt), round(avg(pool), 0), round(avg(aqua), 0), round(avg(wellness), 0) "
         "FROM data "
@@ -102,7 +102,7 @@ def get_records(
     ]
 
 
-def get_date_filter(date_from: datetime.datetime) -> str:
+def get_date_filter(date_from: Optional[datetime.datetime]) -> str:
     return (
         f" AND strftime('%Y-%m-%d', dt) >= '{date_from:%Y-%m-%d}'" if date_from else ""
     )
@@ -110,9 +110,9 @@ def get_date_filter(date_from: datetime.datetime) -> str:
 
 def get_chart(
     cursor: sqlite3.Cursor,
-    records: typing.List[Record],
+    records: list[Record],
     day: Day,
-    date_from: datetime.datetime,
+    date_from: Optional[datetime.datetime],
 ) -> Chart:
     return Chart(
         day=day,
@@ -125,7 +125,7 @@ def get_chart(
 
 
 def get_days_count(
-    cursor: sqlite3.Cursor, day: Day, date_from: datetime.datetime
+    cursor: sqlite3.Cursor, day: Day, date_from: Optional[datetime.datetime]
 ) -> int:
     cursor.execute(
         f"SELECT DISTINCT date(dt) FROM data "
@@ -134,7 +134,7 @@ def get_days_count(
     return len(cursor.fetchall())
 
 
-def publish_page(charts: typing.List[Chart]) -> None:
+def publish_page(charts: list[Chart]) -> None:
     page = pathlib.Path(get_file_name())
     page.write_text(
         get_template().render(
