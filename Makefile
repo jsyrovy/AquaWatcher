@@ -20,9 +20,6 @@ download:
 publish:
 	${PYTHON} publisher.py
 
-publish-after-covid:
-	${PYTHON} publisher.py 2020-05-25 after_covid.html
-
 mypy:
 	${PYTHON} -m mypy --ignore-missing-imports .
 
