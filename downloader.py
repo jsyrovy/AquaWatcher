@@ -1,9 +1,13 @@
 import dataclasses
 import datetime
+import json
 import pathlib
 
 import bs4
 import requests
+
+JSON_PATH = "downloader.json"
+RAISE_AFTER_KEY = "raise_after"
 
 
 @dataclasses.dataclass
@@ -52,5 +56,38 @@ def save_record(record: Record) -> None:
     print(f"Data were saved: {path}")
 
 
+def should_raise() -> bool:
+    return get_raise_after() <= datetime.datetime.now()
+
+
+def get_raise_after() -> datetime.datetime:
+    try:
+        with open(JSON_PATH) as f:
+            return datetime.datetime.fromisoformat(json.load(f)[RAISE_AFTER_KEY])
+    except FileNotFoundError:
+        return datetime.datetime.max
+
+
+def save_raise_after() -> None:
+    with open(JSON_PATH, "w") as f:
+        json.dump(
+            {
+                RAISE_AFTER_KEY: (
+                    datetime.datetime.now() + datetime.timedelta(days=1)
+                ).isoformat()
+            },
+            f,
+            indent=4,
+        )
+
+
 if __name__ == "__main__":
-    save_record(get_record())
+    try:
+        save_record(get_record())
+    except Exception as e:
+        if should_raise():
+            save_raise_after()
+            raise
+        print(f"Error: {e}")
+    else:
+        save_raise_after()
