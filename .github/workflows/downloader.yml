@@ -26,7 +26,7 @@ jobs:
       - name: Save
         uses: EndBug/add-and-commit@v4
         with:
-          add: data
+          add: data downloader.json
           author_name: downloader
           author_email: ${{ secrets.AUTHOR_EMAIL }}
           message: Add data
