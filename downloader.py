@@ -23,12 +23,12 @@ def get_record() -> Record:
     soup = bs4.BeautifulSoup(r.content, "html.parser")
 
     values = soup.find("div", class_="fast-info").find_all("span")
-    assert len(values) == 3, f"Unexpected number of values: {len(values)}"
+    assert len(values) in {3, 4}, f"Unexpected number of values: {len(values)}"
 
     record = Record(
         pool=int(values[0].text),
         aqua=int(values[1].text),
-        wellness=int(values[2].text),
+        wellness=int(values[2 if len(values) == 3 else 3].text),
     )
 
     print(f"Data were downloaded: {record}")
