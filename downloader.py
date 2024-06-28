@@ -19,7 +19,9 @@ class Record:
 
 
 def get_record() -> Record:
-    r = requests.get("http://www.aquapce.cz")
+    r = requests.get(
+        "https://www.aquapce.cz/nejvetsi-aquacentrum-ve-vychodnich-cechach-aquapce.cz"
+    )
     soup = bs4.BeautifulSoup(r.content, "html.parser")
 
     values = soup.find("div", class_="fast-info").find_all("span")
