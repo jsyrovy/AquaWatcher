@@ -8,7 +8,7 @@ download:
 	uv run --group downloader --no-dev --no-group publisher downloader.py
 
 publish:
-	uv run --group publisher --no-dev --no-group downloader downloader.py
+	uv run --group publisher --no-dev --no-group downloader publisher.py
 
 mypy:
 	uv run --dev -m mypy --ignore-missing-imports .
