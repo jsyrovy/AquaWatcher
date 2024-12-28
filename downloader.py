@@ -2,6 +2,7 @@ import dataclasses
 import datetime
 import json
 import pathlib
+from pathlib import Path
 
 import bs4
 import requests
@@ -19,18 +20,22 @@ class Record:
 
 
 def get_record() -> Record:
-    r = requests.get(
-        "https://www.aquapce.cz/nejvetsi-aquacentrum-ve-vychodnich-cechach-aquapce.cz"
-    )
+    r = requests.get("https://www.aquapce.cz/nejvetsi-aquacentrum-ve-vychodnich-cechach-aquapce.cz")
     soup = bs4.BeautifulSoup(r.content, "html.parser")
 
     values = soup.find("div", class_="fast-info").find_all("span")
-    assert len(values) in {3, 4}, f"Unexpected number of values: {len(values)}"
+
+    winter_values_count = 3
+    summer_values_count = 4
+
+    if len(values) not in {winter_values_count, summer_values_count}:
+        raise ValueError(f"Unexpected number of values: {len(values)}")
+
 
     record = Record(
         pool=int(values[0].text),
         aqua=int(values[1].text),
-        wellness=int(values[2 if len(values) == 3 else 3].text),
+        wellness=int(values[-1].text),
     )
 
     print(f"Data were downloaded: {record}")
@@ -39,9 +44,7 @@ def get_record() -> Record:
 
 
 def save_record(record: Record) -> None:
-    path = pathlib.Path(
-        f"data/{record.dt.year}/{record.dt:%m}/{record.dt:%Y-%m-%d}.csv"
-    )
+    path = pathlib.Path(f"data/{record.dt.year}/{record.dt:%m}/{record.dt:%Y-%m-%d}.csv")
 
     if not path.parent.exists():
         path.parent.mkdir(parents=True)
@@ -50,10 +53,7 @@ def save_record(record: Record) -> None:
         path.write_text("dt,pool,aqua,wellness\n")
 
     with path.open("a") as f:
-        f.write(
-            f"{record.dt:%Y-%m-%d %H:%M:%S},"
-            f"{record.pool},{record.aqua},{record.wellness}\n"
-        )
+        f.write(f"{record.dt:%Y-%m-%d %H:%M:%S},{record.pool},{record.aqua},{record.wellness}\n")
 
     print(f"Data were saved: {path}")
 
@@ -64,20 +64,16 @@ def should_raise() -> bool:
 
 def get_raise_after() -> datetime.datetime:
     try:
-        with open(JSON_PATH) as f:
+        with Path(JSON_PATH).open("r") as f:
             return datetime.datetime.fromisoformat(json.load(f)[RAISE_AFTER_KEY])
     except FileNotFoundError:
         return datetime.datetime.max
 
 
 def save_raise_after() -> None:
-    with open(JSON_PATH, "w") as f:
+    with Path(JSON_PATH).open("w") as f:
         json.dump(
-            {
-                RAISE_AFTER_KEY: (
-                    datetime.datetime.now() + datetime.timedelta(days=1)
-                ).isoformat()
-            },
+            {RAISE_AFTER_KEY: (datetime.datetime.now() + datetime.timedelta(days=1)).isoformat()},
             f,
             indent=4,
         )

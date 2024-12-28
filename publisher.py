@@ -3,10 +3,9 @@ import datetime
 import pathlib
 import sqlite3
 import sys
-from typing import Optional
 
 import jinja2
-import pandas
+import pandas as pd
 
 INDEX_TEMPLATE = "index.html"
 
@@ -51,8 +50,8 @@ def load_files(conn: sqlite3.Connection) -> None:
 
 
 def load_csv(conn: sqlite3.Connection, path: pathlib.Path) -> None:
-    df = pandas.read_csv(path, sep=",")
-    df.to_sql("data", conn, if_exists="append")
+    data = pd.read_csv(path, sep=",")
+    data.to_sql("data", conn, if_exists="append")
 
 
 def get_charts(cursor: sqlite3.Cursor) -> list[Chart]:
@@ -80,16 +79,14 @@ def get_charts(cursor: sqlite3.Cursor) -> list[Chart]:
     return charts
 
 
-def get_date_from() -> Optional[datetime.datetime]:
+def get_date_from() -> datetime.datetime | None:
     if len(sys.argv) == 1:
         return None
 
     return datetime.datetime.strptime(sys.argv[1], "%Y-%m-%d")
 
 
-def get_records(
-    cursor: sqlite3.Cursor, day: Day, date_from: Optional[datetime.datetime]
-) -> list[Record]:
+def get_records(cursor: sqlite3.Cursor, day: Day, date_from: datetime.datetime | None) -> list[Record]:
     cursor.execute(
         "SELECT "
         "strftime('%H', dt), "
@@ -99,24 +96,20 @@ def get_records(
         "FROM data "
         f"WHERE strftime('%w', dt) = '{day.number}'{get_date_filter(date_from)}"
         "GROUP BY strftime('%H', dt) "
-        "ORDER BY strftime('%H', dt)"
+        "ORDER BY strftime('%H', dt)",
     )
-    return [
-        Record(int(r[0]), int(r[1]), int(r[2]), int(r[3])) for r in cursor.fetchall()
-    ]
+    return [Record(int(r[0]), int(r[1]), int(r[2]), int(r[3])) for r in cursor.fetchall()]
 
 
-def get_date_filter(date_from: Optional[datetime.datetime]) -> str:
-    return (
-        f" AND strftime('%Y-%m-%d', dt) >= '{date_from:%Y-%m-%d}'" if date_from else ""
-    )
+def get_date_filter(date_from: datetime.datetime | None) -> str:
+    return f" AND strftime('%Y-%m-%d', dt) >= '{date_from:%Y-%m-%d}'" if date_from else ""
 
 
 def get_chart(
     cursor: sqlite3.Cursor,
     records: list[Record],
     day: Day,
-    date_from: Optional[datetime.datetime],
+    date_from: datetime.datetime | None,
 ) -> Chart:
     return Chart(
         day=day,
@@ -128,12 +121,9 @@ def get_chart(
     )
 
 
-def get_days_count(
-    cursor: sqlite3.Cursor, day: Day, date_from: Optional[datetime.datetime]
-) -> int:
+def get_days_count(cursor: sqlite3.Cursor, day: Day, date_from: datetime.datetime | None) -> int:
     cursor.execute(
-        f"SELECT DISTINCT date(dt) FROM data "
-        f"WHERE strftime('%w', dt) = '{day.number}'{get_date_filter(date_from)}"
+        f"SELECT DISTINCT date(dt) FROM data WHERE strftime('%w', dt) = '{day.number}'{get_date_filter(date_from)}",
     )
     return len(cursor.fetchall())
 
@@ -141,9 +131,7 @@ def get_days_count(
 def publish_page(charts: list[Chart]) -> None:
     page = pathlib.Path(get_file_name())
     page.write_text(
-        get_template().render(
-            charts=charts, dt=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        ),
+        get_template().render(charts=charts, dt=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
         "UTF-8",
     )
     print(f"Page was published: {page}")
