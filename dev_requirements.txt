@@ -1,6 +1,0 @@
-mypy
-types-requests
-black
-flake8
-coverage
-ipython

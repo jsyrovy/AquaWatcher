@@ -1,0 +1,23 @@
+[project]
+name = "aqua-watcher"
+version = "0.1.0"
+description = "Stránka zobrazující grafy s průměrnou hodinovou návštěvností pardubického aquacentra"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "coverage>=7.6.10",
+    "ipython>=8.31.0",
+    "mypy>=1.14.0",
+    "types-requests>=2.32.0.20241016",
+]
+downloader = [
+    "beautifulsoup4>=4.12.3",
+    "requests>=2.32.3",
+]
+publisher = [
+    "jinja2>=3.1.5",
+    "pandas>=2.2.3",
+]

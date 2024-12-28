@@ -1,38 +1,31 @@
-PYTHON=venv/bin/python3
-
 .DEFAULT:
 	help
 
 help:
 	@echo "I don't know what you want me to do."
 
-init:
-	python3 -m venv venv
-	${PYTHON} -m pip install -r downloader_requirements.txt
-	${PYTHON} -m pip install -r publisher_requirements.txt
-
-init-dev: init
-	${PYTHON} -m pip install -r dev_requirements.txt
-
 download:
-	${PYTHON} downloader.py
+	uv run --group downloader --no-dev --no-group publisher downloader.py
 
 publish:
-	${PYTHON} publisher.py
+	uv run --group publisher --no-dev --no-group downloader downloader.py
 
 mypy:
-	${PYTHON} -m mypy --ignore-missing-imports .
+	uv run --dev -m mypy --ignore-missing-imports .
 
-flake8:
-	${PYTHON} -m flake8 .
+lint:
+	uvx ruff check
 
-black:
-	${PYTHON} -m black .
+lint-fix:
+	uvx ruff check --fix
+
+format:
+	uvx ruff format
 
 before-commit:
-	make black
+	make format
+	make lint
 	make mypy
-	make flake8
 
 ipython:
-	${PYTHON} -c "import IPython;IPython.terminal.ipapp.launch_new_instance();"
+	uv run --dev --group downloader --group publisher python -c "import IPython;IPython.terminal.ipapp.launch_new_instance();"

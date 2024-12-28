@@ -9,18 +9,14 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v2
-      - name: Setup python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.11"
-      - name: Install requirements
-        run: pip install -r publisher_requirements.txt
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
       - name: Setup timezone
         uses: zcong1993/setup-timezone@master
         with:
           timezone: Europe/Prague
       - name: Publish
-        run: python publisher.py
+        run: make publish
       - name: Save
         uses: EndBug/add-and-commit@v4
         with:

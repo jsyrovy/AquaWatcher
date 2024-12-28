@@ -6,16 +6,12 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v2
-      - name: Setup python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.11"
-      - name: Install requirements
-        run: pip install -r downloader_requirements.txt
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
       - name: Test
         run: |
           rm -r data
-          python downloader.py
+          make download
           file_name=data/$(date +"%Y")/$(date +"%m")/$(date +"%Y-%m-%d").csv
           echo "file_name = $file_name"
           test -e $file_name
@@ -24,15 +20,11 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v2
-      - name: Setup python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.11"
-      - name: Install requirements
-        run: pip install -r publisher_requirements.txt
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
       - name: Test
         run: |
           rm index.html
-          python publisher.py
+          make publish
           test -e index.html
           grep "Pardubické Aquacentrum" index.html
