@@ -6,7 +6,7 @@ name = "aqua-watcher"
 version = "0.1.0"
 source = { virtual = "." }
 
-[package.dev-ç]
+[package.dev-dependencies]
 dev = [
     { name = "coverage" },
     { name = "ipython" },
