@@ -24,7 +24,7 @@ format:
 
 before-commit:
 	make format
-	make lint
+	make lint-fix
 	make mypy
 
 ipython:
