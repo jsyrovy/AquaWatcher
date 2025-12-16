@@ -106,10 +106,9 @@
             new Chartist.Line('.ct-chart{{ chart.day.number }}', {labels: {{ chart.labels }}, series: [{{ chart.serie_pool }}, {{ chart.serie_aqua }}, {{ chart.serie_wellness }}]}, options);
         {% endfor %}
     </script>
-    <script src="https://getinsights.io/js/insights.js"></script>
-    <script>
-        insights.init('cAgUcVL8H8GlI0I9');
-        insights.trackPages();
-    </script>
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+            data-cf-beacon='{"token": "6c0cbe94db64456e8e9b69c8f171518d"}'></script>
+    <!-- End Cloudflare Web Analytics -->
 </body>
 </html>
