@@ -7,30 +7,38 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.js" type="text/javascript"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartist-plugin-tooltips@0.0.17/dist/chartist-plugin-tooltip.min.js" type="text/javascript"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.js"
+            type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartist-plugin-tooltips@0.0.17/dist/chartist-plugin-tooltip.min.js"
+            type="text/javascript"></script>
     <style>
         .pool {
             color: #0544d3;
         }
+
         .aqua {
             color: #f05b4f;
         }
+
         .wellness {
             color: #f4c63d;
         }
+
         .legend {
             text-align: center;
         }
+
         .ct-label {
             font-size: 1.5rem;
         }
+
         .ct-series-a .ct-line,
         .ct-series-a .ct-point {
             stroke: #0544d3;
         }
+
         .chartist-tooltip {
             position: absolute;
             display: inline-block;
@@ -49,6 +57,7 @@
             -o-transition: opacity 0.2s linear;
             transition: opacity 0.2s linear;
         }
+
         .chartist-tooltip:before {
             content: "";
             position: absolute;
@@ -60,9 +69,11 @@
             border: 15px solid transparent;
             border-top-color: #453d3f;
         }
+
         .chartist-tooltip.tooltip-show {
             opacity: 1;
         }
+
         .ct-area,
         .ct-line {
             pointer-events: none;
@@ -71,44 +82,48 @@
 
 </head>
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="twelve column" style="margin-top: 5%">
-                <h3>Pardubické Aquacentrum</h3>
-                <h5>Průměrná hodinová návštěvnost</h5>
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="twelve column" style="margin-top: 5%">
+            <h3>Pardubické Aquacentrum</h3>
+            <h5>Průměrná hodinová návštěvnost</h5>
         </div>
-        {% for chart in charts %}
-            <div class="row" style="margin-top: 2%">
-                <h4 title="Průměr z(e) {{ chart.days }} dnů.">{{ chart.day.name }}</h4>
-                <div class="ct-chart{{ chart.day.number }} ct-major-twelfth"></div>
-                <div class="legend"><span class="pool">Bazén</span> | <span class="aqua">Aqua</span> | <span class="wellness">Wellness</span></div>
-            </div>
-        {% endfor %}
     </div>
-    <script>
-        var options = {
-            lineSmooth: true,
-            showPoint: true,
-            axisX: {
+    {% for chart in charts %}
+        <div class="row" style="margin-top: 2%">
+            <h4 title="Průměr z(e) {{ chart.days }} dnů.">{{ chart.day.name }}</h4>
+            <div class="ct-chart{{ chart.day.number }} ct-major-twelfth"></div>
+            <div class="legend"><span class="pool">Bazén</span> | <span class="aqua">Aqua</span> | <span
+                    class="wellness">Wellness</span></div>
+        </div>
+    {% endfor %}
+</div>
+<script>
+    var options = {
+        lineSmooth: true,
+        showPoint: true,
+        axisX: {
             showGrid: false,
             showLabel: true
-            },
-            axisY: {
+        },
+        axisY: {
             showGrid: true,
             showLabel: true
-            },
-            plugins: [
-                Chartist.plugins.tooltip()
-            ]
-        }
-        {% for chart in charts %}
-            new Chartist.Line('.ct-chart{{ chart.day.number }}', {labels: {{ chart.labels }}, series: [{{ chart.serie_pool }}, {{ chart.serie_aqua }}, {{ chart.serie_wellness }}]}, options);
-        {% endfor %}
-    </script>
-    <!-- Cloudflare Web Analytics -->
-    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
-            data-cf-beacon='{"token": "6c0cbe94db64456e8e9b69c8f171518d"}'></script>
-    <!-- End Cloudflare Web Analytics -->
+        },
+        plugins: [
+            Chartist.plugins.tooltip()
+        ]
+    }
+    {% for chart in charts %}
+        new Chartist.Line('.ct-chart{{ chart.day.number }}', {
+            labels: {{ chart.labels }},
+            series: [{{ chart.serie_pool }}, {{ chart.serie_aqua }}, {{ chart.serie_wellness }}]
+        }, options);
+    {% endfor %}
+</script>
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "6c0cbe94db64456e8e9b69c8f171518d"}'></script>
+<!-- End Cloudflare Web Analytics -->
 </body>
 </html>
