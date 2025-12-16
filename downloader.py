@@ -16,11 +16,11 @@ class Record:
     pool: int
     aqua: int
     wellness: int
-    dt: datetime.datetime = datetime.datetime.now()
+    dt: datetime.datetime = dataclasses.field(default_factory=datetime.datetime.now)
 
 
 def get_record() -> Record:
-    r = requests.get("https://www.aquapce.cz/nejvetsi-aquacentrum-ve-vychodnich-cechach-aquapce.cz")
+    r = requests.get("https://www.aquapce.cz/nejvetsi-aquacentrum-ve-vychodnich-cechach-aquapce.cz", timeout=10)
     soup = bs4.BeautifulSoup(r.content, "html.parser")
 
     values = soup.find("div", class_="fast-info").find_all("span")
@@ -30,7 +30,6 @@ def get_record() -> Record:
 
     if len(values) not in {winter_values_count, summer_values_count}:
         raise ValueError(f"Unexpected number of values: {len(values)}")
-
 
     record = Record(
         pool=int(values[0].text),
