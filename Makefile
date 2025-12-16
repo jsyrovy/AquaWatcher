@@ -26,6 +26,10 @@ before-commit:
 	make format
 	make lint-fix
 	make mypy
+	make ty
 
 ipython:
 	uv run --dev --group downloader --group publisher python -c "import IPython;IPython.terminal.ipapp.launch_new_instance();"
+
+ty:
+	uvx ty check
