@@ -87,22 +87,25 @@ def get_date_from() -> datetime.datetime | None:
 
 
 def get_records(cursor: sqlite3.Cursor, day: Day, date_from: datetime.datetime | None) -> list[Record]:
-    cursor.execute(
+    query = (
         "SELECT "
         "strftime('%H', dt), "
         "round(avg(pool), 0), "
         "round(avg(aqua), 0), "
         "round(avg(wellness), 0) "
         "FROM data "
-        f"WHERE strftime('%w', dt) = '{day.number}'{get_date_filter(date_from)}"
-        "GROUP BY strftime('%H', dt) "
-        "ORDER BY strftime('%H', dt)",
+        "WHERE strftime('%w', dt) = ?"
     )
+    params = [str(day.number)]
+
+    if date_from:
+        query += " AND strftime('%Y-%m-%d', dt) >= ?"
+        params.append(date_from.strftime("%Y-%m-%d"))
+
+    query += " GROUP BY strftime('%H', dt) ORDER BY strftime('%H', dt)"
+
+    cursor.execute(query, params)
     return [Record(int(r[0]), int(r[1]), int(r[2]), int(r[3])) for r in cursor.fetchall()]
-
-
-def get_date_filter(date_from: datetime.datetime | None) -> str:
-    return f" AND strftime('%Y-%m-%d', dt) >= '{date_from:%Y-%m-%d}'" if date_from else ""
 
 
 def get_chart(
@@ -122,9 +125,14 @@ def get_chart(
 
 
 def get_days_count(cursor: sqlite3.Cursor, day: Day, date_from: datetime.datetime | None) -> int:
-    cursor.execute(
-        f"SELECT DISTINCT date(dt) FROM data WHERE strftime('%w', dt) = '{day.number}'{get_date_filter(date_from)}",
-    )
+    query = "SELECT DISTINCT date(dt) FROM data WHERE strftime('%w', dt) = ?"
+    params = [str(day.number)]
+
+    if date_from:
+        query += " AND strftime('%Y-%m-%d', dt) >= ?"
+        params.append(date_from.strftime("%Y-%m-%d"))
+
+    cursor.execute(query, params)
     return len(cursor.fetchall())
 
 

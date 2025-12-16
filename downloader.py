@@ -23,7 +23,10 @@ def get_record() -> Record:
     r = requests.get("https://www.aquapce.cz/nejvetsi-aquacentrum-ve-vychodnich-cechach-aquapce.cz", timeout=10)
     soup = bs4.BeautifulSoup(r.content, "html.parser")
 
-    values = soup.find("div", class_="fast-info").find_all("span")
+    if not (info := soup.find("div", class_="fast-info")):
+        raise ValueError("Cannot find fast-info div")
+
+    values = info.find_all("span")
 
     winter_values_count = 3
     summer_values_count = 4
